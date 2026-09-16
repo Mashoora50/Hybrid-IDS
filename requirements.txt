@@ -1,7 +1,7 @@
 streamlit
-xgboost
-tensorflow-cpu==2.15.1
-shap
+xgboost==2.0.3
+shap==0.44.1
+tensorflow-cpu
 joblib
 pandas
 numpy
