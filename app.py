@@ -39,10 +39,10 @@ HYBRID_DIR = f"{BASE_PATH}/artifacts/hybrid"
 # autoencoder was actually trained on, so results are trustworthy.
 # (Contains: Benign, Infiltration, DoS-GoldenEye, DoS-Slowloris)
 TEST_DATA_PATHS = [
-    f"{BASE_PATH}/Data/raw/Thursday-15-02-2018_TrafficForML_CICFlowMeter.csv",
-    f"{BASE_PATH}/Data/raw/Thursday-01-03-2018_TrafficForML_CICFlowMeter.csv",
-    f"{BASE_PATH}/Data/raw/Friday-16-02-2018_TrafficForML_CICFlowMeter.csv",
-    f"{BASE_PATH}/Data/raw/Friday-02-03-2018_TrafficForML_CICFlowMeter.csv",
+    f"{BASE_PATH}/Data/sample/Thursday-15-02-2018_sample.csv",
+    f"{BASE_PATH}/Data/sample/Thursday-01-03-2018_sample.csv",
+    f"{BASE_PATH}/Data/sample/Friday-16-02-2018_sample.csv",
+    f"{BASE_PATH}/Data/sample/Friday-02-03-2018_sample.csv",
 ]
  
 ATTACK_SEVERITY_WEIGHT = {
