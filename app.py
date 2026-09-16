@@ -6,6 +6,20 @@ import xgboost as xgb
 import tensorflow as tf
 import shap
 import streamlit as st
+
+from tensorflow.keras import layers, models, regularizers
+
+def build_autoencoder(input_dim, encoding_dim=16, l2_reg=1e-5):
+    inputs = layers.Input(shape=(input_dim,))
+    x = layers.Dense(64, activation="relu", activity_regularizer=regularizers.l2(l2_reg))(inputs)
+    x = layers.Dense(32, activation="relu")(x)
+    bottleneck = layers.Dense(encoding_dim, activation="relu", name="bottleneck")(x)
+    x = layers.Dense(32, activation="relu")(bottleneck)
+    x = layers.Dense(64, activation="relu")(x)
+    outputs = layers.Dense(input_dim, activation="linear")(x)
+    model = models.Model(inputs, outputs)
+    model.compile(optimizer="adam", loss="mse")
+    return model
  
 BASE_PATH ="."
  
@@ -88,9 +102,10 @@ def load_artifacts():
     xgb_feature_cols = joblib.load(f"{XGB_DIR}/feature_columns.pkl")
     xgb_scaler = joblib.load(f"{XGB_DIR}/scaler.pkl")
  
-    autoencoder = tf.keras.models.load_model(f"{AE_DIR}/autoencoder_model.keras")
-    ae_scaler = joblib.load(f"{AE_DIR}/scaler.pkl")
     ae_feature_cols = joblib.load(f"{AE_DIR}/feature_columns.pkl")
+    autoencoder = build_autoencoder(input_dim=len(ae_feature_cols), encoding_dim=16)
+    autoencoder.load_weights(f"{AE_DIR}/autoencoder_model.keras")
+    ae_scaler = joblib.load(f"{AE_DIR}/scaler.pkl")
     anomaly_threshold = joblib.load(f"{AE_DIR}/anomaly_threshold.pkl")
  
     hybrid_config = joblib.load(f"{HYBRID_DIR}/hybrid_config.pkl")
