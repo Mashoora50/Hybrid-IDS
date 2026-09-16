@@ -35,9 +35,7 @@ XGB_DIR = f"{BASE_PATH}/artifacts/xgboost_no_leakage"
 AE_DIR = f"{BASE_PATH}/artifacts/autoencoder_all4days"
 HYBRID_DIR = f"{BASE_PATH}/artifacts/hybrid"
  
-# Only the two validated Thursday files -- these match what the
-# autoencoder was actually trained on, so results are trustworthy.
-# (Contains: Benign, Infiltration, DoS-GoldenEye, DoS-Slowloris)
+
 TEST_DATA_PATHS = [
     f"{BASE_PATH}/Data/sample/Thursday-15-02-2018_sample.csv",
     f"{BASE_PATH}/Data/sample/Thursday-01-03-2018_sample.csv",
@@ -145,6 +143,7 @@ def load_test_data(xgb_feature_cols, ae_feature_cols):
         col_map = {c: c.strip().lower().replace(" ", "_") for c in header.columns}
         cols_to_keep = [orig for orig, low in col_map.items() if low in needed_lower]
         df = pd.read_csv(path, usecols=cols_to_keep, low_memory=False)
+        df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_", regex=False)
         pieces.append(df)
     combined = pd.concat(pieces, ignore_index=True)
     return combined
