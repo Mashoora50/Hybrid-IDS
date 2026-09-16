@@ -1,0 +1,7 @@
+Data/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+artifacts/xgboost/
+artifacts/autoencoder/
+artifacts/autoencoder_final/
