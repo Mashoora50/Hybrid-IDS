@@ -20,6 +20,14 @@ def build_autoencoder(input_dim, encoding_dim=16, l2_reg=1e-5):
     model = models.Model(inputs, outputs)
     model.compile(optimizer="adam", loss="mse")
     return model
+class XGBBoosterWrapper:
+
+    def __init__(self, booster):
+        self.booster = booster
+
+    def predict_proba(self, X):
+        dmat = xgb.DMatrix(X)
+        return self.booster.predict(dmat)
  
 BASE_PATH ="."
  
@@ -96,8 +104,9 @@ st.markdown("""
  
 @st.cache_resource
 def load_artifacts():
-    xgb_model = xgb.XGBClassifier()
-    xgb_model.load_model(f"{XGB_DIR}/xgb_model.json")
+    booster = xgb.Booster()
+    booster.load_model(f"{XGB_DIR}/xgb_model.json")
+    xgb_model = XGBBoosterWrapper(booster)
     label_encoder = joblib.load(f"{XGB_DIR}/label_encoder.pkl")
     xgb_feature_cols = joblib.load(f"{XGB_DIR}/feature_columns.pkl")
     xgb_scaler = joblib.load(f"{XGB_DIR}/scaler.pkl")
@@ -111,7 +120,7 @@ def load_artifacts():
     hybrid_config = joblib.load(f"{HYBRID_DIR}/hybrid_config.pkl")
     infil_threshold = hybrid_config["infil_confidence_threshold"]
  
-    explainer = shap.TreeExplainer(xgb_model)
+    explainer = shap.TreeExplainer(booster)
  
     return {
         "xgb_model": xgb_model, "label_encoder": label_encoder,

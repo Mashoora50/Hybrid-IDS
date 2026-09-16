@@ -1,6 +1,6 @@
 streamlit
-xgboost==2.0.3
-shap==0.44.1
+xgboost
+shap>=0.46
 tensorflow-cpu
 joblib
 pandas
